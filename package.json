@@ -1,13 +1,13 @@
 {
   "name": "flutterwaveV3Angular",
   "version": "1.0.0",
-  "description": "Library QuickStart package.json from the documentation, supplemented with testing support",
+  "description": "Flutterwave SDK for Angular 2 and above",
   "author": "Flutterwave",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/toybz/flutterwaveAngularSDk.git"
   },
-  "homepage": "",
+  "homepage": "https://github.com/toybz/flutterwaveAngularSDk",
   "keywords": [
     "Flutterwave",
     "Fintech",
