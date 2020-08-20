@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FlutterwaveCheckout, InlinePaymentOptions} from './models';
+import {FlutterwaveCheckout, InlinePaymentOptions, PaymentSuccessResponse} from './models';
 
 @Component({
   selector: 'flutterwave-make-payment',
@@ -16,7 +16,7 @@ export class MakePaymentComponent implements OnInit {
   @Input() redirect_url: string;
   @Input() meta: object; //{ counsumer_id, consumer_mac}
   @Input() customer: object; //{email, phone_number,name}
-  @Output() callback: EventEmitter<object> = new EventEmitter<object>();
+  @Output() callback: EventEmitter<PaymentSuccessResponse> = new EventEmitter<PaymentSuccessResponse>();
   /*
     callBack interface
     amount: 90000
@@ -29,6 +29,8 @@ export class MakePaymentComponent implements OnInit {
    */
   @Output() close: EventEmitter<any> = new EventEmitter();
   @Input() customizations: object; //{title, description, logo}
+
+
 
   @Input() text: string;
   @Input() style: any;
@@ -82,7 +84,7 @@ export class MakePaymentComponent implements OnInit {
       redirect_url: this.redirect_url || '',
       meta: {...this.meta_defaults, ...this.meta},
       customer: {...this.customer_defaults, ...this.customer},
-      callback: (response: object) => this.callback.emit(response),
+      callback: (response: PaymentSuccessResponse) => this.callback.emit(response),
       onclose: () => this.close.emit(),
       customizations: {...this.customer_defaults, ...this.customizations}
     }
