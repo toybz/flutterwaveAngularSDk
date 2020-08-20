@@ -1,5 +1,5 @@
 {
-  "name": "flutterwaveV3Angular",
+  "name": "flutterwave-v3-angular",
   "version": "1.0.0",
   "description": "Flutterwave SDK for Angular 2 and above",
   "author": "Flutterwave",
@@ -17,7 +17,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --open --port=9879",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

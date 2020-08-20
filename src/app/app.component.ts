@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {Flutterwave} from './modules/make-payment/flutterwave.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,16 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+
+
+
+  constructor(private flutterwave: Flutterwave ) {
+
+    this.flutterwave.getBanks('NG').subscribe()
+
+  }
+
+
+
+
 }

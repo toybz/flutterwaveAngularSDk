@@ -1,8 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FlutterwaveCheckout, InlinePaymentOptions} from './models';
 
-
-
 @Component({
   selector: 'flutterwave-make-payment',
   templateUrl: './make-payment.component.html',
