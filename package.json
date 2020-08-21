@@ -1,6 +1,6 @@
 {
   "name": "flutterwave-v3-angular",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Flutterwave SDK for Angular 2 and above",
   "author": "Toyeeb Rahmon",
   "repository": {
@@ -24,7 +24,9 @@
     "e2e": "ng e2e",
     "packagr": "npx ng-packagr -p ng-package.json",
     "pack": "cd dist && npm pack",
-    "publish": "npm publish"
+    "publish:npm": "npm publish",
+    "publish:yarn": "yarn publish"
+
   },
   "private": false,
   "dependencies": {

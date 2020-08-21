@@ -6,6 +6,12 @@
 
 
 
+## Demo
+
+![Alt text](examples/makePayment.png?raw=true "Demo Image")
+
+
+
 ## Installation
 
 ```bash
@@ -58,6 +64,8 @@ import FlutterwaveModule from "flutterwave-v3-angular"
   payment_options="card,ussd"
   redirect_url=""
   text="Pay Now"
+  className="class-name"
+  style=""
   [meta]="{counsumer_id: '7898' ,consumer_mac: 'kjs9s8ss7dd'   }"
   [customer]="{ name: 'Demo Customer  Name',email: 'customer@mail.com', phone_number: '08184505144' }"
   [customizations]="{  title: 'Customization Title' ,description: 'Customization Description'  ,  logo : 'https://flutterwave.com/images/logo-colored.svg' }"
@@ -77,6 +85,9 @@ amount: 9000,
 currency: 'NGN',
 payment_options: 'card,ussd',
 redirect_url: '',
+text: 'Pay Now',
+className: '',
+style: '',
 meta :{  'counsumer_id': '7898' , 'consumer_mac'  : 'kjs9s8ss7dd'   },
 customer : {name: 'Demo Customer  Name',email: 'customer2@mail.com',phone_number: '081845***' },
 customizations: {title: 'Customization Title' , description: 'Customization Description'  , logo : 'https://flutterwave.com/images/logo-colored.svg' } ,
