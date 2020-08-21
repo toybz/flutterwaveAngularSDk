@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {Flutterwave} from './modules/make-payment/flutterwave.service';
-import {InlinePaymentOptions, PaymentSuccessResponse} from './modules/make-payment/models';
+import {Flutterwave} from './modules/flutterwave.service';
+import {InlinePaymentOptions, PaymentSuccessResponse} from './modules/models';
 
 @Component({
   selector: 'app-root',

@@ -1,5 +1,5 @@
 import { EventEmitter, OnInit } from '@angular/core';
-import { InlinePaymentOptions, PaymentSuccessResponse } from './models';
+import { InlinePaymentOptions, PaymentSuccessResponse } from '../models';
 export declare class MakePaymentComponent implements OnInit {
     public_key: string;
     tx_ref: string;
