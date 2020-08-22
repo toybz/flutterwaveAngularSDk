@@ -74,9 +74,9 @@ MakePaymentComponent.decorators = [
                 selector: 'flutterwave-make-payment',
                 template: `
     <button
-      class="flutterwave-pay-button"
-      [ngStyle]="style"
-      [ngClass]="className"
+
+      style="{{style}}"
+      [ngClass]="className ? className : 'flutterwave-pay-button' "
       (click)="makePayment()">
       {{text || 'Pay'}}
     </button>

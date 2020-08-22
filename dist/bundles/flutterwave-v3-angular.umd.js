@@ -82,7 +82,7 @@ var MakePaymentComponent = (function () {
 MakePaymentComponent.decorators = [
     { type: core.Component, args: [{
                 selector: 'flutterwave-make-payment',
-                template: "\n    <button\n      class=\"flutterwave-pay-button\"\n      [ngStyle]=\"style\"\n      [ngClass]=\"className\"\n      (click)=\"makePayment()\">\n      {{text || 'Pay'}}\n    </button>\n  ",
+                template: "\n    <button\n\n      style=\"{{style}}\"\n      [ngClass]=\"className ? className : 'flutterwave-pay-button' \"\n      (click)=\"makePayment()\">\n      {{text || 'Pay'}}\n    </button>\n  ",
                 styles: ["\n    .flutterwave-pay-button{\n      background-color: #f5a623;\n      border-radius: 4px;\n      border-color: #f5a623;\n      -webkit-box-shadow: 0 2px 3px 0 #ccc;\n              box-shadow: 0 2px 3px 0 #ccc;\n      color: #fff;\n      display: block;\n      font-size: 12px;\n      font-weight: 700;\n      padding: 14px 22px;\n      text-align: center;\n      text-decoration: none;\n      -webkit-transition: all .3s ease-in-out;\n      transition: all .3s ease-in-out;\n\n    }\n  "]
             },] },
 ];
