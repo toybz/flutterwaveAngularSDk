@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import {FlutterwaveModule} from './modules/make-payment/make-payment.module';
+import {FlutterwaveModule} from './modules/flutterwave.module';
 
 @NgModule({
   declarations: [

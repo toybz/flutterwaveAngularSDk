@@ -4,7 +4,7 @@ import {InlinePaymentOptions, PaymentSuccessResponse} from './modules/models';
 
 @Component({
   selector: 'app-root',
-  template: `<button (click)="makePayment()" )>Pay</button>`,
+  template: `<button (click)="makePayment()" >Pay</button>`,
 })
 export class AppComponent {
   title = 'app';
