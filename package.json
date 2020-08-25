@@ -1,7 +1,7 @@
 {
   "name": "flutterwave-v3-angular",
-  "version": "1.0.8",
-  "description": "Flutterwave SDK for Angular 2 and above",
+  "version": "1.0.9",
+  "description": "Flutterwave official  Angular library to accept payment via  card , USSD, QrCode etc.",
   "author": "Toyeeb Rahmon",
   "repository": {
     "type": "git",

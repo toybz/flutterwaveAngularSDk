@@ -1,31 +1,35 @@
 ## 📝 Table of Contents
 
 - [About](#about)
-- [Getting Started](https://www.notion.so/flutterwavego/SDK-Doc-structure-0eebc573807a4bf8b99c65d4618fdb98#5c4107d981244429b309cbcd954d5c18)
-- [Usage](https://www.notion.so/flutterwavego/SDK-Doc-structure-0eebc573807a4bf8b99c65d4618fdb98#30eb23af86334769bee2650a75837e54)
-- [Running tests](https://www.notion.so/flutterwavego/SDK-Doc-structure-0eebc573807a4bf8b99c65d4618fdb98#d92d0cb9d8844c649c23274c874c6eba)
-- [Deployment](https://www.notion.so/flutterwavego/SDK-Doc-structure-0eebc573807a4bf8b99c65d4618fdb98#c1ea07f7d19c427da8c4e6a3aae7b8e3)
-- [Built Using](https://www.notion.so/flutterwavego/SDK-Doc-structure-0eebc573807a4bf8b99c65d4618fdb98#7a8da9eb61b142fb879ff33d56488b59)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Running tests](#test)
+- [Deployment](#deployment)
+- [Built Using](#build-tools)
 - [Contributors](#contributors)
-- [Acknowledgments](https://www.notion.so/flutterwavego/SDK-Doc-structure-0eebc573807a4bf8b99c65d4618fdb98#d8edb268ac63402296f69af9c10dc8a3)
+- [References](#references)
 
+<a id="about"></a>
 ## About
 
-Flutterwave Official  Angular library to accept payment via  card , USSD, QrCode etc.
+Flutterwave official  Angular library to accept payment via  card , USSD, QrCode etc.
 
+<a id="getting-started"></a>
 
 ## 🏁 Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](https://www.notion.so/flutterwavego/SDK-Doc-structure-0eebc573807a4bf8b99c65d4618fdb98#deployment) for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
+See [references](#references) for links to dashboard and API documentation.
+
 
 ### Prerequisites
 
 
 
 ```
-Node  >= 6.9.x and npm >= 3
+Node version >= 6.9.x and npm >= 3.x.x
 Angular version  >= 4
-Flutterwave version 3
+Flutterwave version 3 API keys
 
 ```
 
@@ -42,6 +46,7 @@ $ yarn  add  flutterwave-v3-angular
 ```
 
 
+<a id="usage"></a>
 
 ## 🔧 Usage
 
@@ -50,7 +55,7 @@ Include the Flutterwave V3 script tag to the index.html file
 
 <script src="https://checkout.flutterwave.com/v3.js"></script>
 
-// example below
+ <!--example below-->
 
 <!doctype html>
 <html lang="en">
@@ -76,7 +81,7 @@ Include the Flutterwave V3 script tag to the index.html file
 ```
 
 
-Import FlutterwaveModule  and add to  app root module
+Import FlutterwaveModule to the  app root module
 
 ```javascript
 import FlutterwaveModule from "flutterwave-v3-angular"
@@ -94,10 +99,10 @@ import FlutterwaveModule from "flutterwave-v3-angular"
 })
 ```
 
-Use in component method 1 
+Use as component. Method 1 
 
 ```javascript
-//Pass  in payment parameter individually as component attributes
+//Method 1: Pass  in payment parameters individually as component attributes
 
 <flutterwave-make-payment
   public_key="FLWPUBK_TEST-*************"
@@ -110,18 +115,18 @@ Use in component method 1
   className="class-name"
   style=""
   [meta]="{counsumer_id: '7898' ,consumer_mac: 'kjs9s8ss7dd'   }"
-  [customer]="{ name: 'Demo Customer  Name',email: 'customer@mail.com', phone_number: '08184505144' }"
+  [customer]="{ name: 'Demo Customer  Name',email: 'customer@mail.com', phone_number: '0818450****' }"
   [customizations]="{  title: 'Customization Title' ,description: 'Customization Description'  ,  logo : 'https://flutterwave.com/images/logo-colored.svg' }"
   (callback)="makePaymentCallback($event)"
   (close)="cancelledPayment()" 
 ></flutterwave-make-payment>
 ```
 
-Use in component method 2
+Use as component. Method 2
 
 ```javascript
 
-// Pass in the payment parameter as an object to the component 'data' attribute
+//Method 2: Pass in the payment parameters as an object to the component 'data' attribute
 
 <flutterwave-make-payment [data]="{
 public_key: 'FLWPUBK_TEST-***********',
@@ -145,7 +150,7 @@ onclose:  cancelledPayment
 ```
 
 
-#### Use in code (Flutterwave service)
+Use in code (Flutterwave service)
 
 ```javascript
 
@@ -209,42 +214,18 @@ export class AppComponent {
 
 
 
-
-
-## 🔧 Running tests
-
-Explain how to run the automated tests for this system. For users who would like to run tests before going live
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-
-```
-
-### And coding style tests (optional)
-
-Explain what these tests test and why
-
-```
-Give an example
-
-```
-
+<a id="deployment"></a>
 ## 🚀 Deployment
 
 - Switch to Live Mode on the Dashboard settings page
 - Use the Live Public API key 
 
+<a id="build-tools"></a>
 ## ⛏️ Built Using
 
-Mention the tools used in developing this package, e.g:
-
-- [Angular CLI](https://www.mongodb.com/) - Database
-- [Typescript](https://expressjs.com/) - Server Framework
-- [Angular](https://vuejs.org/) - Web Framework
+- [Angular CLI](https://cli.angular.io/) 
+- [Typescript](https://www.typescriptlang.org/)
+- [Angular](https://vuejs.org/)
 
 <a id="contributors"></a>
 ## ✍️ Contributors
@@ -253,7 +234,9 @@ Mention the tools used in developing this package, e.g:
 
 See also the list of [contributors](https://github.com/flutterwave/flutterwave-v3-angular/contributors) who participated in this project.
 
+<a id="references"></a>
 ## 🎉 Flutterwave API  References
 
 - [Flutterwave API Doc](https://developer.flutterwave.com/docs/flutterwave-inline)
 - [Flutterwave Inline Payment Doc](https://developer.flutterwave.com/docs/flutterwave-inline)
+-[Flutterwave Dashboard](https://dashboard.flutterwave.com/login)  
