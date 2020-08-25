@@ -225,7 +225,7 @@ export class AppComponent {
 
 - [Angular CLI](https://cli.angular.io/) 
 - [Typescript](https://www.typescriptlang.org/)
-- [Angular](https://vuejs.org/)
+- [Angular](https://angular.io/)
 
 <a id="contributors"></a>
 ## ✍️ Contributors
@@ -237,6 +237,6 @@ See also the list of [contributors](https://github.com/flutterwave/flutterwave-v
 <a id="references"></a>
 ## 🎉 Flutterwave API  References
 
-- [Flutterwave API Doc](https://developer.flutterwave.com/docs/flutterwave-inline)
+- [Flutterwave API Doc](https://developer.flutterwave.com/docs)
 - [Flutterwave Inline Payment Doc](https://developer.flutterwave.com/docs/flutterwave-inline)
--[Flutterwave Dashboard](https://dashboard.flutterwave.com/login)  
+- [Flutterwave Dashboard](https://dashboard.flutterwave.com/login)  
