@@ -6,7 +6,6 @@
 - [Running tests](#test)
 - [Deployment](#deployment)
 - [Built Using](#build-tools)
-- [Contributors](#contributors)
 - [References](#references)
 
 <a id="about"></a>
@@ -24,8 +23,6 @@ See [references](#references) for links to dashboard and API documentation.
 
 ### Prerequisites
 
-
-
 ```
 Node version >= 6.9.x and npm >= 3.x.x
 Angular version  >= 4
@@ -39,9 +36,9 @@ Flutterwave version 3 API keys
 Install the SDK 
 
 ```bash
-$ npm install flutterwave-v3-angular
+$ npm install flutterwave-angular-v3
 # or
-$ yarn  add  flutterwave-v3-angular
+$ yarn  add  flutterwave-angular-v3
 
 ```
 
@@ -84,7 +81,7 @@ Include the Flutterwave V3 script tag to the index.html file
 Import FlutterwaveModule to the  app root module
 
 ```javascript
-import FlutterwaveModule from "flutterwave-v3-angular"
+import { FlutterwaveModule } from "flutterwave-angular-v3"
 
 @NgModule({
   declarations: [
@@ -101,13 +98,15 @@ import FlutterwaveModule from "flutterwave-v3-angular"
 
 Use as component. Method 1 
 
-```javascript
-//Method 1: Pass  in payment parameters individually as component attributes
+```html
+<!--
+Method 1: Pass  in payment parameters individually as component attributes
+-->
 
 <flutterwave-make-payment
   public_key="FLWPUBK_TEST-*************"
   tx_ref="25673*******"
-  amount=90000
+  amount=9000
   currency='NGN'
   payment_options="card,ussd"
   redirect_url=""
@@ -124,9 +123,11 @@ Use as component. Method 1
 
 Use as component. Method 2
 
-```javascript
+```html
 
-//Method 2: Pass in the payment parameters as an object to the component 'data' attribute
+<!--
+Method 2: Pass in the payment parameters as an object to the component 'data' attribute
+-->
 
 <flutterwave-make-payment [data]="{
 public_key: 'FLWPUBK_TEST-***********',
@@ -155,7 +156,7 @@ Use in code (Flutterwave service)
 ```javascript
 
 import { Component } from '@angular/core';
-import {Flutterwave, InlinePaymentOptions, PaymentSuccessResponse} from "flutterwave-v3-angular";
+import {Flutterwave, InlinePaymentOptions, PaymentSuccessResponse} from "flutterwave-angular-v3";
 
 @Component({
   selector: 'app-root',
@@ -227,12 +228,6 @@ export class AppComponent {
 - [Typescript](https://www.typescriptlang.org/)
 - [Angular](https://angular.io/)
 
-<a id="contributors"></a>
-## ✍️ Contributors
-
-- [@ArtOlamilekan](https://twitter.com/artolamilekan)
-
-See also the list of [contributors](https://github.com/flutterwave/flutterwave-v3-angular/contributors) who participated in this project.
 
 <a id="references"></a>
 ## 🎉 Flutterwave API  References

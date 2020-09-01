@@ -164,4 +164,4 @@ FlutterwaveModule.ctorParameters = () => [];
  */
 
 export { FlutterwaveModule, Flutterwave, InlinePaymentOptions, PaymentSuccessResponse, MakePaymentComponent };
-//# sourceMappingURL=flutterwave-v3-angular.js.map
+//# sourceMappingURL=flutterwave-angular-v3.js.map
