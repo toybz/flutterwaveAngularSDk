@@ -12,17 +12,20 @@
     "Flutterwave",
     "Fintech",
     "Angular",
-    "Fluterwave"
+    "Fluterwave",
+    "Ionic"
+  ],
+  "files": [
+    "dist/**/*"
   ],
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --open --port=9879",
-    "build": "ng build",
+    "start": "ng serve --open",
+    "build": "npx ng-packagr -p ng-package.json",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "packagr": "npx ng-packagr -p ng-package.json",
     "pack": "cd dist && npm pack"
 
   },

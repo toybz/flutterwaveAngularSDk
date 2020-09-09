@@ -227,6 +227,8 @@ export class AppComponent {
 - [Angular CLI](https://cli.angular.io/) 
 - [Typescript](https://www.typescriptlang.org/)
 - [Angular](https://angular.io/)
+- [ng-packagr](https://github.com/ng-packagr/ng-packagr)
+
 
 
 <a id="references"></a>
