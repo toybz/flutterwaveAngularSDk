@@ -81,6 +81,7 @@ export class MakePaymentComponent implements OnInit {
   }
 
   makePayment() {
+
     this.prepareForPayment();
     FlutterwaveCheckout(this.inlinePaymentOptions);
 
