@@ -9,16 +9,6 @@ class PaymentSuccessResponse {
 class MakePaymentComponent {
     constructor() {
         this.callback = new EventEmitter();
-        /*
-          callBack interface
-          amount: 90000
-         currency: "NGN"
-         customer: {name: "Demo Customer  Name", email: "customer@mail.com", phone_number: "08184505144"}
-         flw_ref: "FLW-MOCK-e8fbce1a9441489c03f997a55404ff4d"
-         status: "successful"
-         transaction_id: 1468479
-         tx_ref: "hshbnsfshhs"
-         */
         this.close = new EventEmitter();
         this.customer_defaults = {
             email: "",
@@ -54,6 +44,10 @@ class MakePaymentComponent {
         this.customer = this.customer || {};
         this.meta = this.meta || {};
         this.customizations = this.customizations || {};
+        // get the payment iframe
+        let /** @type {?} */ paymentFrame = document.getElementsByName('checkout')[0];
+        //get the initial style of the payment iframe
+        let /** @type {?} */ initialIframeStyle = paymentFrame.getAttribute('style');
         this.inlinePaymentOptions = this.data ? this.data : {
             public_key: this.public_key,
             tx_ref: this.tx_ref,
@@ -63,9 +57,19 @@ class MakePaymentComponent {
             redirect_url: this.redirect_url || '',
             meta: Object.assign({}, this.meta_defaults, this.meta),
             customer: Object.assign({}, this.customer_defaults, this.customer),
-            callback: (response) => this.callback.emit(response),
             onclose: () => this.close.emit(),
-            customizations: Object.assign({}, this.customer_defaults, this.customizations)
+            customizations: Object.assign({}, this.customizations_defaults, this.customizations)
+        };
+        this.inlinePaymentOptions.callback = (response) => {
+            if (this.closeAfterSuccessfulPayment && this.durationBeforeClose) {
+                let /** @type {?} */ waitDuration = this.durationBeforeClose * 1000;
+                setTimeout(() => {
+                    //apply the initial style to the payment iframe, so it goes back to it's initial mode
+                    console.log("setting initial style");
+                    document.getElementsByName('checkout')[0].setAttribute('style', initialIframeStyle + "z-index: -1; opacity: 0");
+                }, waitDuration);
+            }
+            this.callback.emit(response);
         };
     }
 }
@@ -116,6 +120,8 @@ MakePaymentComponent.propDecorators = {
     'meta': [{ type: Input },],
     'customer': [{ type: Input },],
     'callback': [{ type: Output },],
+    'closeAfterSuccessfulPayment': [{ type: Input },],
+    'durationBeforeClose': [{ type: Input },],
     'close': [{ type: Output },],
     'customizations': [{ type: Input },],
     'text': [{ type: Input },],
@@ -132,6 +138,26 @@ class Flutterwave {
      */
     inlinePay(paymentData) {
         FlutterwaveCheckout(paymentData);
+    }
+    /**
+     * @param {?} paymentData
+     * @return {?}
+     */
+    asyncInlinePay(paymentData) {
+        let /** @type {?} */ paymentFrame = document.getElementsByName('checkout')[0];
+        let /** @type {?} */ initialIframeStyle = paymentFrame.getAttribute('style');
+        return new Promise((resolve, reject) => {
+            paymentData = Object.assign({}, paymentData, { callback: ($event) => {
+                    if (paymentData.closeAfterSuccessfulPayment && paymentData.durationBeforeClose) {
+                        let /** @type {?} */ waitDuration = paymentData.durationBeforeClose * 1000;
+                        setTimeout(() => {
+                            document.getElementsByName('checkout')[0].setAttribute('style', initialIframeStyle + "z-index: -1; opacity: 0");
+                        }, waitDuration);
+                    }
+                    resolve($event);
+                }, onclose: () => resolve('closed') });
+            FlutterwaveCheckout(paymentData);
+        });
     }
 }
 Flutterwave.decorators = [

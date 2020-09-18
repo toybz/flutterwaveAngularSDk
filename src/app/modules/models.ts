@@ -1,17 +1,20 @@
 
 
   class  InlinePaymentOptions {
-  public_key: string;
+  public_key?: string;
   tx_ref: string;
   amount: number;
   currency?: string;
-  payment_options?: string
+  payment_options?: string;
   redirect_url?: string;
   meta ?: any;
-  customer : object
-  callback: (response: object) => void;
+  customer : object;
+  callback?: (response: object) => void;
   onclose?: () => void;
-  customizations?: object
+  customizations?: object;
+  closeAfterSuccessfulPayment?: boolean;
+  durationBeforeClose?: number
+
 }
 
   declare function  FlutterwaveCheckout(any)

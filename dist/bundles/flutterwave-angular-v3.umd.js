@@ -17,16 +17,6 @@ var PaymentSuccessResponse = (function () {
 var MakePaymentComponent = (function () {
     function MakePaymentComponent() {
         this.callback = new core.EventEmitter();
-        /*
-          callBack interface
-          amount: 90000
-         currency: "NGN"
-         customer: {name: "Demo Customer  Name", email: "customer@mail.com", phone_number: "08184505144"}
-         flw_ref: "FLW-MOCK-e8fbce1a9441489c03f997a55404ff4d"
-         status: "successful"
-         transaction_id: 1468479
-         tx_ref: "hshbnsfshhs"
-         */
         this.close = new core.EventEmitter();
         this.customer_defaults = {
             email: "",
@@ -63,6 +53,10 @@ var MakePaymentComponent = (function () {
         this.customer = this.customer || {};
         this.meta = this.meta || {};
         this.customizations = this.customizations || {};
+        // get the payment iframe
+        var /** @type {?} */ paymentFrame = document.getElementsByName('checkout')[0];
+        //get the initial style of the payment iframe
+        var /** @type {?} */ initialIframeStyle = paymentFrame.getAttribute('style');
         this.inlinePaymentOptions = this.data ? this.data : {
             public_key: this.public_key,
             tx_ref: this.tx_ref,
@@ -72,9 +66,19 @@ var MakePaymentComponent = (function () {
             redirect_url: this.redirect_url || '',
             meta: Object.assign({}, this.meta_defaults, this.meta),
             customer: Object.assign({}, this.customer_defaults, this.customer),
-            callback: function (response) { return _this.callback.emit(response); },
             onclose: function () { return _this.close.emit(); },
-            customizations: Object.assign({}, this.customer_defaults, this.customizations)
+            customizations: Object.assign({}, this.customizations_defaults, this.customizations)
+        };
+        this.inlinePaymentOptions.callback = function (response) {
+            if (_this.closeAfterSuccessfulPayment && _this.durationBeforeClose) {
+                var /** @type {?} */ waitDuration = _this.durationBeforeClose * 1000;
+                setTimeout(function () {
+                    //apply the initial style to the payment iframe, so it goes back to it's initial mode
+                    console.log("setting initial style");
+                    document.getElementsByName('checkout')[0].setAttribute('style', initialIframeStyle + "z-index: -1; opacity: 0");
+                }, waitDuration);
+            }
+            _this.callback.emit(response);
         };
     };
     return MakePaymentComponent;
@@ -100,6 +104,8 @@ MakePaymentComponent.propDecorators = {
     'meta': [{ type: core.Input },],
     'customer': [{ type: core.Input },],
     'callback': [{ type: core.Output },],
+    'closeAfterSuccessfulPayment': [{ type: core.Input },],
+    'durationBeforeClose': [{ type: core.Input },],
     'close': [{ type: core.Output },],
     'customizations': [{ type: core.Input },],
     'text': [{ type: core.Input },],
@@ -116,6 +122,26 @@ var Flutterwave = (function () {
      */
     Flutterwave.prototype.inlinePay = function (paymentData) {
         FlutterwaveCheckout(paymentData);
+    };
+    /**
+     * @param {?} paymentData
+     * @return {?}
+     */
+    Flutterwave.prototype.asyncInlinePay = function (paymentData) {
+        var /** @type {?} */ paymentFrame = document.getElementsByName('checkout')[0];
+        var /** @type {?} */ initialIframeStyle = paymentFrame.getAttribute('style');
+        return new Promise(function (resolve, reject) {
+            paymentData = Object.assign({}, paymentData, { callback: function ($event) {
+                    if (paymentData.closeAfterSuccessfulPayment && paymentData.durationBeforeClose) {
+                        var /** @type {?} */ waitDuration = paymentData.durationBeforeClose * 1000;
+                        setTimeout(function () {
+                            document.getElementsByName('checkout')[0].setAttribute('style', initialIframeStyle + "z-index: -1; opacity: 0");
+                        }, waitDuration);
+                    }
+                    resolve($event);
+                }, onclose: function () { return resolve('closed'); } });
+            FlutterwaveCheckout(paymentData);
+        });
     };
     return Flutterwave;
 }());

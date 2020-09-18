@@ -1,5 +1,5 @@
 declare class InlinePaymentOptions {
-    public_key: string;
+    public_key?: string;
     tx_ref: string;
     amount: number;
     currency?: string;
@@ -7,9 +7,11 @@ declare class InlinePaymentOptions {
     redirect_url?: string;
     meta?: any;
     customer: object;
-    callback: (response: object) => void;
+    callback?: (response: object) => void;
     onclose?: () => void;
     customizations?: object;
+    closeAfterSuccessfulPayment?: boolean;
+    durationBeforeClose?: number;
 }
 declare function FlutterwaveCheckout(any: any): any;
 declare class PaymentSuccessResponse {

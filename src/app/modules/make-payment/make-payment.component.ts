@@ -1,5 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FlutterwaveCheckout, InlinePaymentOptions, PaymentSuccessResponse} from '../models';
+import {tryCatch} from 'rxjs/util/tryCatch';
 
 @Component({
   selector: 'flutterwave-make-payment',
@@ -17,16 +18,14 @@ export class MakePaymentComponent implements OnInit {
   @Input() meta: object; //{ counsumer_id, consumer_mac}
   @Input() customer: object; //{email, phone_number,name}
   @Output() callback: EventEmitter<PaymentSuccessResponse> = new EventEmitter<PaymentSuccessResponse>();
+
+
+  @Input() closeAfterSuccessfulPayment: boolean;
   /*
-    callBack interface
-    amount: 90000
-   currency: "NGN"
-   customer: {name: "Demo Customer  Name", email: "customer@mail.com", phone_number: "08184505144"}
-   flw_ref: "FLW-MOCK-e8fbce1a9441489c03f997a55404ff4d"
-   status: "successful"
-   transaction_id: 1468479
-   tx_ref: "hshbnsfshhs"
+   * durationBeforeClose; kndkndn
    */
+  @Input() durationBeforeClose: number ;
+
   @Output() close: EventEmitter<any> = new EventEmitter();
   @Input() customizations: object; //{title, description, logo}
 
@@ -37,8 +36,6 @@ export class MakePaymentComponent implements OnInit {
   @Input() className: string;
 
   @Input() data: InlinePaymentOptions;
-
-
 
   private inlinePaymentOptions: InlinePaymentOptions
 
@@ -62,6 +59,25 @@ export class MakePaymentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+   /* if(this.data){
+
+      this.public_key = this.data.public_key;
+        this.tx_ref = this.data.tx_ref;
+       this.amount = this.data.amount;
+        this.currency= this.data.currency || 'NGN';
+        this.payment_options = this.data.payment_options || "card, mobilemoney, ussd";
+        this.redirect_url= this.data.redirect_url || '';
+        this.meta= this.data.meta;
+      this.customer = this.customer ;
+     this.close = this.data.onclose;
+      this.customizations= this.data.customizations
+      this.callback = this.data.callback
+
+
+
+    }*/
+
   }
 
   makePayment() {
@@ -71,9 +87,19 @@ export class MakePaymentComponent implements OnInit {
   }
 
   prepareForPayment(): void {
-    this.customer = this.customer || {}
-    this.meta = this.meta || {}
-    this.customizations = this.customizations || {}
+
+    this.customer = this.customer || {};
+    this.meta = this.meta || {};
+    this.customizations = this.customizations || {};
+
+    // get the payment iframe
+    let paymentFrame = document.getElementsByName('checkout')[0] ;
+
+    //get the initial style of the payment iframe
+
+   let initialIframeStyle : any = paymentFrame.getAttribute('style') ;
+
+
 
     this.inlinePaymentOptions =  this.data ? this.data :  {
       public_key: this.public_key,
@@ -84,10 +110,28 @@ export class MakePaymentComponent implements OnInit {
       redirect_url: this.redirect_url || '',
       meta: {...this.meta_defaults, ...this.meta},
       customer: {...this.customer_defaults, ...this.customer},
-      callback: (response: PaymentSuccessResponse) => this.callback.emit(response),
       onclose: () => this.close.emit(),
-      customizations: {...this.customer_defaults, ...this.customizations}
+      customizations: {...this.customizations_defaults, ...this.customizations}
     }
+
+    this.inlinePaymentOptions.callback = (response: PaymentSuccessResponse) => {
+
+      if(this.closeAfterSuccessfulPayment && this.durationBeforeClose){
+
+    let waitDuration  = this.durationBeforeClose  * 1000 ;
+        setTimeout(
+          ()=>{
+            //apply the initial style to the payment iframe, so it goes back to it's initial mode
+            console.log("setting initial style");
+            document.getElementsByName('checkout')[0].setAttribute('style', initialIframeStyle + "z-index: -1; opacity: 0")
+
+          } , waitDuration
+        )
+      }
+
+      this.callback.emit(response)
+    }
+
 
   }
 
