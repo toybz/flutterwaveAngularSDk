@@ -29,12 +29,12 @@ Please follow the guidelines below when adding features, components, services to
 
 * All components and services should be attached to the flutterwave.module.ts
 
-* All components, services, modules etc  to be exposed by the Library must be exported in the 
+* All components, services, modules, models  etc  to be exposed by the Library must be exported in the 
   './public_api.ts' file
 
 
 ###Build And Publish
-
+ Increase the version in package.json, then build the project.
 To build, run :
 
  ```javascript

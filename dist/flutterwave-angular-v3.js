@@ -1,8 +1,46 @@
 import { Component, EventEmitter, Injectable, Input, NgModule, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+/**
+ * Payment data object
+ * \@property public_key {String}
+ * \@property callbackContext {Object}  The context of the component or service that has the callback method. The value must always be 'this'. Using any other value might lead to error.
+ * \@property tx_ref {String}
+ * \@property amount {Number}
+ * \@property currency {String}
+ * \@property payment_options {String}
+ * \@property redirect_url {String}
+ * \@property meta {Object}
+ * \@property customer {Object}
+ * \@property customizations {Object}
+ * \@property callback {Function}
+ * \@property onclose {Function}
+ */
 class InlinePaymentOptions {
 }
+/**
+ * Async Payment data object
+ * \@property public_key {String}
+ * \@property tx_ref {String}
+ * \@property amount {Number}
+ * \@property currency {String}
+ * \@property payment_options {String}
+ * \@property meta {Object}
+ * \@property customer {Object}
+ * \@property customizations {Object}
+ */
+class AsyncPaymentOptions {
+}
+/**
+ * Payment Response
+ * \@property amount {String}
+ * \@property currency {Number}
+ * \@property customer {Object}
+ * \@property flw_ref {String}
+ * \@property status {String}
+ * \@property transaction_id {String}
+ * \@property tx_ref {String}
+ */
 class PaymentSuccessResponse {
 }
 
@@ -44,33 +82,35 @@ class MakePaymentComponent {
         this.customer = this.customer || {};
         this.meta = this.meta || {};
         this.customizations = this.customizations || {};
-        // get the payment iframe
-        let /** @type {?} */ paymentFrame = document.getElementsByName('checkout')[0];
-        //get the initial style of the payment iframe
-        let /** @type {?} */ initialIframeStyle = paymentFrame.getAttribute('style');
-        this.inlinePaymentOptions = this.data ? this.data : {
-            public_key: this.public_key,
-            tx_ref: this.tx_ref,
-            amount: this.amount,
-            currency: this.currency || 'NGN',
-            payment_options: this.payment_options || "card, mobilemoney, ussd",
-            redirect_url: this.redirect_url || '',
-            meta: Object.assign({}, this.meta_defaults, this.meta),
-            customer: Object.assign({}, this.customer_defaults, this.customer),
-            onclose: () => this.close.emit(),
-            customizations: Object.assign({}, this.customizations_defaults, this.customizations)
-        };
-        this.inlinePaymentOptions.callback = (response) => {
-            if (this.closeAfterSuccessfulPayment && this.durationBeforeClose) {
-                let /** @type {?} */ waitDuration = this.durationBeforeClose * 1000;
-                setTimeout(() => {
-                    //apply the initial style to the payment iframe, so it goes back to it's initial mode
-                    console.log("setting initial style");
-                    document.getElementsByName('checkout')[0].setAttribute('style', initialIframeStyle + "z-index: -1; opacity: 0");
-                }, waitDuration);
-            }
-            this.callback.emit(response);
-        };
+        if (this.data) {
+            this.inlinePaymentOptions = Object.assign({}, this.data, { callback: response => {
+                    this.data.callbackContext[this.data.callback.name](response);
+                }, onclose: () => {
+                    try {
+                        this.data.callbackContext[this.data.onclose.name]();
+                    }
+                    catch (e) {
+                    }
+                } });
+        }
+        else {
+            this.inlinePaymentOptions = {
+                callbackContext: null,
+                public_key: this.public_key,
+                tx_ref: this.tx_ref,
+                amount: this.amount,
+                currency: this.currency || 'NGN',
+                payment_options: this.payment_options || "card, mobilemoney, ussd",
+                redirect_url: this.redirect_url || '',
+                meta: Object.assign({}, this.meta_defaults, this.meta),
+                customer: Object.assign({}, this.customer_defaults, this.customer),
+                callback: (response) => {
+                    this.callback.emit(response);
+                },
+                onclose: () => this.close.emit(),
+                customizations: Object.assign({}, this.customizations_defaults, this.customizations)
+            };
+        }
     }
 }
 MakePaymentComponent.decorators = [
@@ -78,7 +118,6 @@ MakePaymentComponent.decorators = [
                 selector: 'flutterwave-make-payment',
                 template: `
     <button
-
       style="{{style}}"
       [ngClass]="className ? className : 'flutterwave-pay-button' "
       (click)="makePayment()">
@@ -120,8 +159,6 @@ MakePaymentComponent.propDecorators = {
     'meta': [{ type: Input },],
     'customer': [{ type: Input },],
     'callback': [{ type: Output },],
-    'closeAfterSuccessfulPayment': [{ type: Input },],
-    'durationBeforeClose': [{ type: Input },],
     'close': [{ type: Output },],
     'customizations': [{ type: Input },],
     'text': [{ type: Input },],
@@ -137,27 +174,38 @@ class Flutterwave {
      * @return {?}
      */
     inlinePay(paymentData) {
-        FlutterwaveCheckout(paymentData);
+        let /** @type {?} */ data = Object.assign({}, paymentData, { callback: response => {
+                paymentData.callbackContext[paymentData.callback.name](response);
+            }, onclose: () => {
+                try {
+                    paymentData.callbackContext[paymentData.onclose.name]();
+                }
+                catch (e) {
+                }
+            } });
+        FlutterwaveCheckout(data);
     }
     /**
      * @param {?} paymentData
      * @return {?}
      */
     asyncInlinePay(paymentData) {
-        let /** @type {?} */ paymentFrame = document.getElementsByName('checkout')[0];
-        let /** @type {?} */ initialIframeStyle = paymentFrame.getAttribute('style');
         return new Promise((resolve, reject) => {
             paymentData = Object.assign({}, paymentData, { callback: ($event) => {
-                    if (paymentData.closeAfterSuccessfulPayment && paymentData.durationBeforeClose) {
-                        let /** @type {?} */ waitDuration = paymentData.durationBeforeClose * 1000;
-                        setTimeout(() => {
-                            document.getElementsByName('checkout')[0].setAttribute('style', initialIframeStyle + "z-index: -1; opacity: 0");
-                        }, waitDuration);
-                    }
                     resolve($event);
                 }, onclose: () => resolve('closed') });
             FlutterwaveCheckout(paymentData);
         });
+    }
+    /**
+     *
+     * @param {?=} waitDuration {Number} Seconds before closing payment modal
+     * @return {?}
+     */
+    closePaymentModal(waitDuration = 0) {
+        setTimeout(() => {
+            document.getElementsByName('checkout')[0].setAttribute('style', "z-index: -1; opacity: 0");
+        }, waitDuration * 1000);
     }
 }
 Flutterwave.decorators = [
@@ -169,6 +217,14 @@ Flutterwave.decorators = [
 Flutterwave.ctorParameters = () => [];
 
 class FlutterwaveModule {
+    constructor() {
+        const inlineSdk = "https://checkout.flutterwave.com/v3.js";
+        const script = document.createElement('script');
+        script.src = inlineSdk;
+        if (!document.querySelector(`[src="${inlineSdk}"]`)) {
+            document.body.appendChild(script);
+        }
+    }
 }
 FlutterwaveModule.decorators = [
     { type: NgModule, args: [{
@@ -189,5 +245,5 @@ FlutterwaveModule.ctorParameters = () => [];
  * Generated bundle index. Do not edit.
  */
 
-export { FlutterwaveModule, Flutterwave, InlinePaymentOptions, PaymentSuccessResponse, MakePaymentComponent };
+export { FlutterwaveModule, Flutterwave, InlinePaymentOptions, PaymentSuccessResponse, AsyncPaymentOptions, MakePaymentComponent };
 //# sourceMappingURL=flutterwave-angular-v3.js.map
