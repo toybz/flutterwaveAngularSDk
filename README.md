@@ -11,7 +11,7 @@
 <a id="about"></a>
 ## About
 
-Flutterwave official  Angular library to accept payment via  card , USSD, QrCode etc.
+Flutterwave official  Angular library to accept payment via  card , USSD, QrCode, Mobile Money etc.
 
 <a id="getting-started"></a>
 
@@ -47,40 +47,9 @@ $ yarn  add  flutterwave-angular-v3
 
 ## 🔧 Usage
 
-Include the Flutterwave V3 script tag to the index.html file
-```html
-
-<script src="https://checkout.flutterwave.com/v3.js"></script>
-
- <!--example below-->
-
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Flutterwave Angular SDK</title>
-  <base href="/">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <app-root></app-root>
-</body>
-
-<script src="https://checkout.flutterwave.com/v3.js"></script>
-
-
-</html>
-
-
-
-```
-
-
 Import FlutterwaveModule to the  app root module
 
-```javascript
+```typescript
 import { FlutterwaveModule } from "flutterwave-angular-v3"
 
 @NgModule({
@@ -96,56 +65,114 @@ import { FlutterwaveModule } from "flutterwave-angular-v3"
 })
 ```
 
-Use as component. Method 1 
+Use as component, Method 1 : Pass  in payment parameters individually as component attributes
 
-```html
-<!--
-Method 1: Pass  in payment parameters individually as component attributes
--->
+```typescript
+import {Component, OnInit} from '@angular/core';
+import {Flutterwave, InlinePaymentOptions, PaymentSuccessResponse} from "flutterwave-angular-v3"
+@Component({
+  selector: 'app-root',
+  template: ` <flutterwave-make-payment
+                [public_key]="publicKey"
+                amount='10'
+                currency='NGN'
+                payment_options="card"
+                redirect_url=""
+                text="Pay Now"
+                [customer]="customerDetails"
+                [customizations]="customizations"
+                [meta]="meta"
+                [tx_ref]="generateReference()"
+                (callback)="makePaymentCallback($event)"
+                (close)="closedPaymentModal()" >
+            </flutterwave-make-payment>`
+})
+export class AppComponent implements OnInit{
+  //use your PUBLIC_KEY here
+  publicKey = "FLWPUBK_TEST-XXXXX-X";
+  customerDetails = { name: 'Demo Customer  Name', email: 'customer@mail.com', phone_number: '08100000000'}
 
-<flutterwave-make-payment
-  public_key="FLWPUBK_TEST-*************"
-  tx_ref="25673*******"
-  amount=9000
-  currency='NGN'
-  payment_options="card,ussd"
-  redirect_url=""
-  text="Pay Now"
-  className="class-name"
-  style=""
-  [meta]="{counsumer_id: '7898' ,consumer_mac: 'kjs9s8ss7dd'   }"
-  [customer]="{ name: 'Demo Customer  Name',email: 'customer@mail.com', phone_number: '0818450****' }"
-  [customizations]="{  title: 'Customization Title' ,description: 'Customization Description'  ,  logo : 'https://flutterwave.com/images/logo-colored.svg' }"
-  (callback)="makePaymentCallback($event)"
-  (close)="cancelledPayment()" 
-></flutterwave-make-payment>
+  customizations = {title: 'Customization Title', description: 'Customization Description', logo: 'https://flutterwave.com/images/logo-colored.svg'}
+
+  meta = {'counsumer_id': '7898', 'consumer_mac': 'kjs9s8ss7dd'}
+ constructor( private flutterwave: Flutterwave) {}
+  makePaymentCallback(response: PaymentSuccessResponse): void {
+    console.log("Pay", response);
+    this.flutterwave.closePaymentModal(5)
+  }
+  closedPaymentModal(): void {
+    console.log('payment is closed');
+  }
+  generateReference(): string {
+    let date = new Date();
+    return date.getTime().toString();
+  }
+}
+
 ```
 
-Use as component. Method 2
+Use as component, Method 2:  Pass in the payment parameters as an object to the component 'data' attribute
 
-```html
+```typescript
+import {Component, OnInit} from '@angular/core';
+import {Flutterwave, InlinePaymentOptions, PaymentSuccessResponse} from "flutterwave-angular-v3"
+import {PaymentService} from './make-payment.service';
 
-<!--
-Method 2: Pass in the payment parameters as an object to the component 'data' attribute
--->
+@Component({
+  selector: 'app-root',
+  template: ` <flutterwave-make-payment  [data]="paymentData" ></flutterwave-make-payment>`
+})
+export class AppComponent implements OnInit{
+  publicKey = "FLWPUBK_TEST-0b0-XXXXXXXXXXX";
 
-<flutterwave-make-payment [data]="{
-public_key: 'FLWPUBK_TEST-***********',
-tx_ref: '78**********',
-amount: 9000,
-currency: 'NGN',
-payment_options: 'card,ussd',
-redirect_url: '',
-text: 'Pay Now',
-className: '',
-style: '',
-meta :{  'counsumer_id': '7898' , 'consumer_mac'  : 'kjs9s8ss7dd'   },
-customer : {name: 'Demo Customer  Name',email: 'customer2@mail.com',phone_number: '081845***' },
-customizations: {title: 'Customization Title' , description: 'Customization Description'  , logo : 'https://flutterwave.com/images/logo-colored.svg' } ,
-callback:  makePaymentCallback ,
-onclose:  cancelledPayment
+ customerDetails = { name: 'Demo Customer  Name', email: 'customer@mail.com', phone_number: '08100000000'}
+
+  customizations = {title: 'Customization Title', description: 'Customization Description', logo: 'https://flutterwave.com/images/logo-colored.svg'}
+
+  meta = {'counsumer_id': '7898', 'consumer_mac': 'kjs9s8ss7dd'}
+
+  paymentData: InlinePaymentOptions = {
+    public_key: this.publicKey,
+    tx_ref: this.generateReference(),
+    amount: 10,
+    currency: 'NGN',
+    payment_options: 'card,ussd',
+    redirect_url: '',
+    meta: this.meta,
+    customer: this.customerDetails,
+    customizations: this.customizations,
+    callback: this.makePaymentCallback,
+    onclose: this.closedPaymentModal,
+    callbackContext: this
+  }
+  
+  constructor(private  paymentService: PaymentService, private flutterwave: Flutterwave) {}
+  ngOnInit(){}
+  payViaService() {
+    this.paymentService.makePayment(this.paymentData)
+  }
+  payViaPromise() {
+    this.paymentService.makePaymentViaPromise().then(
+      (response) =>{
+        console.log("Promise Res" , response)
+        this.flutterwave.closePaymentModal(5)
+      }
+    )
+  }
+ makePaymentCallback(response: PaymentSuccessResponse): void {
+    console.log("Pay", response);
+    this.flutterwave.closePaymentModal(5)
+  }
+  closedPaymentModal(): void {
+    console.log('payment is closed');
+  }
+  generateReference(): string {
+    let date = new Date();
+    return date.getTime().toString();
+  }
+  
 }
-></flutterwave-make-payment>
+
 
 
 ```

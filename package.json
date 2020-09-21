@@ -24,7 +24,8 @@
     "pack": "cd dist && npm pack",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "buildAndPack": "npx ng-packagr -p ng-package.json &&cd dist && npm pack "
 
   },
   "private": false,
