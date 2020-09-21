@@ -51,7 +51,9 @@ class  AsyncPaymentOptions {
   tx_ref: string;
   amount: number;
   currency?: string;
-  payment_options?: string
+  country?: string;
+  authorization?: object | string;
+  payment_options?: string;
   meta ?: any;
   customer : object
   customizations?: object;
@@ -72,13 +74,13 @@ declare function  FlutterwaveCheckout(any)
  * @property tx_ref {String}
  */
  class  PaymentSuccessResponse{
-    amount: number
-    currency: string
-    customer: object
-    flw_ref: string
-    status: string
-    transaction_id: number
-    tx_ref: string
+    amount?: number
+    currency?: string
+    customer?: object
+    flw_ref?: string
+    status?: string
+    transaction_id?: number
+    tx_ref?: string
   }
 
 

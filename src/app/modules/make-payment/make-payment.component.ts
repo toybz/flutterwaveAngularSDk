@@ -98,6 +98,7 @@ export class MakePaymentComponent implements OnInit {
         customizations: {...this.customizations_defaults
           , ...this.customizations}
       }
+
     }
 
 

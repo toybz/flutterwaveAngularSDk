@@ -20,6 +20,8 @@ declare class InlinePaymentOptions {
     tx_ref: string;
     amount: number;
     currency?: string;
+    country?: string;
+    authorization?: object | string;
     payment_options?: string;
     redirect_url?: string;
     meta?: any;
@@ -45,6 +47,8 @@ declare class AsyncPaymentOptions {
     tx_ref: string;
     amount: number;
     currency?: string;
+    country?: string;
+    authorization?: object | string;
     payment_options?: string;
     meta?: any;
     customer: object;
@@ -63,12 +67,12 @@ declare function FlutterwaveCheckout(any: any): any;
  * @property tx_ref {String}
  */
 declare class PaymentSuccessResponse {
-    amount: number;
-    currency: string;
-    customer: object;
-    flw_ref: string;
-    status: string;
-    transaction_id: number;
-    tx_ref: string;
+    amount?: number;
+    currency?: string;
+    customer?: object;
+    flw_ref?: string;
+    status?: string;
+    transaction_id?: number;
+    tx_ref?: string;
 }
 export { InlinePaymentOptions, AsyncPaymentOptions, FlutterwaveCheckout, PaymentSuccessResponse };
