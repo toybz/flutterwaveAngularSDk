@@ -18,9 +18,7 @@ export class Flutterwave {
           paymentData.callbackContext[paymentData.onclose.name]()
         }
         catch (e) {
-
         }
-
       }
     }
 
